@@ -26,4 +26,5 @@ impl Gen6Reader for PokemonXYReader {
     const EGG_OFFSET: usize = 0xC8012C;
     const PARENT1_OFFSET: usize = 0xC7FF4C;
     const PARENT2_OFFSET: usize = 0xC8003C;
+    const WILD_OFFSET: usize = 0x880313C;
 }

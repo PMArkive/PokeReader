@@ -130,6 +130,7 @@ mod test {
         const EGG_OFFSET: usize = 0;
         const PARENT1_OFFSET: usize = 0;
         const PARENT2_OFFSET: usize = 0;
+        const WILD_OFFSET: usize = 0;
     }
 
     mod update_mt {

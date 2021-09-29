@@ -29,9 +29,18 @@ impl Gen6Views {
         }
 
         if views.party_view.get_is_active() {
+            views.wild_view.set_is_active(false);
+
             let party_slot = views.party_view.get_slot();
             let pkx = game.get_party_pkm(party_slot);
             views.party_view.run_view(&pkx, screen)?;
+        }
+
+        if views.wild_view.get_is_active() {
+            views.party_view.set_is_active(false);
+
+            let pkx = game.get_wild_pkm();
+            WildView::run_view(&pkx, screen)?;
         }
 
         Ok(())

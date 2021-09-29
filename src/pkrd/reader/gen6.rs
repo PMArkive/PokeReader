@@ -11,6 +11,7 @@ pub trait Gen6Reader: Reader {
     const EGG_OFFSET: usize;
     const PARENT1_OFFSET: usize;
     const PARENT2_OFFSET: usize;
+    const WILD_OFFSET: usize;
 
     fn get_initial_seed(&self) -> u32 {
         self.default_read(Self::INITIAL_SEED_OFFSET)
@@ -32,5 +33,32 @@ pub trait Gen6Reader: Reader {
     fn get_party_pkm(&self, slot: pkm::PartySlot) -> pkm::Pk6 {
         let offset = ((slot as usize) * 484) + Self::PARTY_OFFSET;
         self.default_read::<pkm::Pk6Data>(offset).into()
+    }
+
+    fn get_wild_pkm_offset(&self) -> usize {
+        let mut pointer = self.default_read::<usize>(Self::WILD_OFFSET) - 0x22C0;
+        if pointer < 0x8000000 || pointer > 0x8DF0000 {
+            return if self.default_read::<usize>(0x804060) == 0 {
+                0x804064
+            } else {
+                0x804060
+            };
+        } else {
+            pointer = self.default_read::<usize>(pointer - 0x8000000);
+            if pointer < 0x8000000 || pointer > 0x8DF0000 {
+                return if self.default_read::<usize>(0x804060) == 0 {
+                    0x804064
+                } else {
+                    0x804060
+                };
+            }
+        }
+
+        pointer - 0x8000000
+    }
+
+    fn get_wild_pkm(&self) -> pkm::Pk6 {
+        self.default_read::<pkm::Pk6Data>(self.get_wild_pkm_offset())
+            .into()
     }
 }
